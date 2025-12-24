@@ -1,69 +1,442 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>欢迎页面</title>
+    <title>翻译助手 - Translation Assistant</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-    
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        .input-section {
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        #message-input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #message-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        #call-api-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #call-api-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #call-api-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        #call-api-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .clear-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .output-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid #e9ecef;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .output-header h3 {
+            color: #333;
+            font-size: 18px;
+        }
+
+        .status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        #output-content {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .result-content {
+            color: #333;
+            word-break: break-word;
+        }
+
+        .json-display {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #call-api-btn,
+            .clear-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
+
 <body>
-    
-    
+    <div class="container">
+        <div class="header">
+            <h1>翻译助手</h1>
+            <p>使用AI技术进行智能翻译</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="message-input">输入文本</label>
+                    <textarea id="message-input" placeholder="请输入要翻译的文本..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="call-api-btn" onclick="mainApi()">开始翻译</button>
+                    <button class="clear-btn" onclick="clearAll()">清空</button>
+                    <div id="loading-indicator" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <span>翻译中...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-section">
+                <div class="output-header">
+                    <h3>翻译结果</h3>
+                    <span id="status-indicator" class="status pending">等待输入</span>
+                </div>
+                <div id="output-content">
+                    <p style="color: #999; text-align: center; padding: 40px;">输入文本并点击"开始翻译"按钮</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 显示API调用结果
-        function showResult(data, isError = false) {
-            const resultDiv = document.getElementById('api-result');
-            resultDiv.innerHTML = JSON.stringify(data, null, 2);
-            resultDiv.className = isError ? 'error' : 'success';
-            resultDiv.style.display = 'block';
-        }
-        
-        // 异步调用欢迎API
-        async function callApi() {
+        // 异步调用POST API
+        async function mainApi() {
+            const message = document.getElementById('message-input').value;
+            const btn = document.getElementById('call-api-btn');
+            const loading = document.getElementById('loading-indicator');
+            const status = document.getElementById('status-indicator');
+            const output = document.getElementById('output-content');
+
             try {
-                const response = await fetch('/api/main');
+                // 输入验证
+                if (!message.trim()) {
+                    showError('请输入要翻译的文本');
+                    return;
+                }
+
+                // 显示加载状态
+                btn.disabled = true;
+                loading.style.display = 'flex';
+                status.className = 'status pending';
+                status.textContent = '翻译中';
+                output.innerHTML = '<p style="color: #667eea; text-align: center; padding: 40px;">正在翻译，请稍候...</p>';
+
+                // 调用API
+                const response = await fetch('/api/main', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
+
                 if (!response.ok) {
                     throw new Error(`HTTP错误! 状态: ${response.status}`);
                 }
+
                 const data = await response.json();
-                showResult(data);
+
+                // 显示结果
+                displayResult(data);
+
+                // 更新状态
+                status.className = 'status success';
+                status.textContent = '翻译完成';
+
             } catch (error) {
-                showResult({ error: error.message }, true);
+                showError(error.message);
+            } finally {
+                // 恢复状态
+                btn.disabled = false;
+                loading.style.display = 'none';
             }
         }
-        
-        // 异步调用健康检查API
-        async function callHealthApi() {
-            try {
-                const response = await fetch('/api/health');
-                if (!response.ok) {
-                    throw new Error(`HTTP错误! 状态: ${response.status}`);
-                }
-                const data = await response.json();
-                showResult(data);
-            } catch (error) {
-                showResult({ error: error.message }, true);
+
+        // 显示错误信息
+        function showError(message) {
+            const status = document.getElementById('status-indicator');
+            const output = document.getElementById('output-content');
+
+            status.className = 'status error';
+            status.textContent = '翻译失败';
+
+            output.innerHTML = `
+                <div class="result-item">
+                    <div class="result-title">错误信息</div>
+                    <div class="result-content" style="color: #dc3545;">${message}</div>
+                </div>
+            `;
+        }
+
+        // 显示翻译结果
+        function displayResult(data) {
+            const output = document.getElementById('output-content');
+
+            if (data.success) {
+                output.innerHTML = `  
+                    <div class="result-item">
+                        <div class="result-title">翻译结果</div>
+                        <textarea class="result-content" type="textarea" value="" readonly style="height: 500px;width: 100%;">${escapeHtml(data.assembledResult)}</textarea> 
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-title">单词翻译明细</div>
+                        <div class="result-content">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #dee2e6;">原始单词</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #dee2e6;">翻译结果</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.originalWords.map((word, index) => `
+                                        <tr>
+                                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${escapeHtml(word)}</td>
+                                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">${escapeHtml(data.translatedWords[index])}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="result-item">
+                        <div class="result-title">详细数据 (JSON)</div>
+                        <div class="result-content json-display">${formatJson(data)}</div>
+                    </div>
+                `;
+            } else {
+                showError(data.error || '翻译失败，请稍后重试');
             }
         }
-        
-        // 清空结果
-        function clearResult() {
-            const resultDiv = document.getElementById('api-result');
-            resultDiv.style.display = 'none';
-            resultDiv.innerHTML = '';
+
+        // 清空所有内容
+        function clearAll() {
+            document.getElementById('message-input').value = '';
+            const status = document.getElementById('status-indicator');
+            const output = document.getElementById('output-content');
+
+            status.className = 'status pending';
+            status.textContent = '等待输入';
+
+            output.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">输入文本并点击"开始翻译"按钮</p>';
         }
-        
-        // 页面加载时自动调用健康检查API
-        window.addEventListener('load', () => {
-            console.log('页面加载完成，准备调用API...');
-        });
+
+        // 工具函数：转义HTML字符
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 工具函数：格式化JSON
+        function formatJson(obj) {
+            return JSON.stringify(obj, null, 2)
+                .replace(/"(\w+)":/g, '<span style="color: #007bff;">$1</span>:')
+                .replace(/"([^"\\]*(\\.[^"\\]*)*)":/g, '<span style="color: #28a745;">"$1"</span>:')
+                .replace(/: "([^"\\]*(\\.[^"\\]*)*)"/g, ': <span style="color: #dc3545;">"$1"</span>')
+                .replace(/: (true|false|null)/g, ': <span style="color: #6f42c1;">$1</span>')
+                .replace(/: (\d+)/g, ': <span style="color: #fd7e14;">$1</span>');
+        }
     </script>
 </body>
+
 </html>
