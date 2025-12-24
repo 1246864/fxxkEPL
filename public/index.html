@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+    </style>
+</head>
+<body>
+    
+    
+    <script>
+        // 显示API调用结果
+        function showResult(data, isError = false) {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.innerHTML = JSON.stringify(data, null, 2);
+            resultDiv.className = isError ? 'error' : 'success';
+            resultDiv.style.display = 'block';
+        }
+        
+        // 异步调用欢迎API
+        async function callApi() {
+            try {
+                const response = await fetch('/api/main');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态: ${response.status}`);
+                }
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult({ error: error.message }, true);
+            }
+        }
+        
+        // 异步调用健康检查API
+        async function callHealthApi() {
+            try {
+                const response = await fetch('/api/health');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误! 状态: ${response.status}`);
+                }
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult({ error: error.message }, true);
+            }
+        }
+        
+        // 清空结果
+        function clearResult() {
+            const resultDiv = document.getElementById('api-result');
+            resultDiv.style.display = 'none';
+            resultDiv.innerHTML = '';
+        }
+        
+        // 页面加载时自动调用健康检查API
+        window.addEventListener('load', () => {
+            console.log('页面加载完成，准备调用API...');
+        });
+    </script>
+</body>
+</html>
