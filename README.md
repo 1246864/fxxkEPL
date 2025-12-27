@@ -16,25 +16,70 @@
 - **AI服务**：阿里云百炼（默认），支持自定义
 - **前端**：HTML, CSS, JavaScript
 - **缓存**：文件缓存（JSON格式）
+- **容器化**：Docker
 
-## 安装和运行
+## 快速开始
 
-### 1. 安装依赖
+### 方式一：使用Docker（推荐）
+
+#### 1. 拉取Docker镜像
+
+```bash
+docker pull mayozhayu/fxxkepl
+```
+
+#### 2. 运行Docker容器
+
+```bash
+docker run -p 3000:3000 -e API_KEY=your-api-key mayozhayu/fxxkepl
+```
+
+**参数说明**：
+- `-p 3000:3000`：端口映射，将容器内的3000端口映射到主机的3000端口
+- `-e API_KEY=your-api-key`：设置环境变量，配置你的AI服务API密钥
+- 可以添加更多环境变量，如 `-e PORT=8080` 来修改服务端口
+
+#### 3. 访问服务
+
+打开浏览器访问 `http://localhost:3000`
+
+### 方式二：本地运行
+
+#### 1. 克隆项目
+
+```bash
+git clone <repository-url>
+cd fxxkEPL
+```
+
+#### 2. 安装依赖
 
 ```bash
 npm install
 ```
 
-### 2. 配置AI服务
+#### 3. 配置API密钥
 
-编辑 `ai-service.js` 文件，配置你的AI服务信息：
+通过环境变量设置API密钥：
 
-```javascript
-const API_KEY = 'your-api-key'; // 替换为你的实际 API 密钥
-const MODEL_NAME = 'your-model-name'; // 替换为你的实际模型名称
+**Windows (PowerShell)**：
+```powershell
+$env:API_KEY='your-api-key'
 ```
 
-### 3. 启动服务
+**Windows (CMD)**：
+```cmd
+set API_KEY=your-api-key
+```
+
+**Linux/Mac**：
+```bash
+export API_KEY=your-api-key
+```
+
+首次运行时，API密钥会自动保存到 `config.json` 文件中，后续启动无需再次设置。
+
+#### 4. 启动服务
 
 ```bash
 node index.js
@@ -47,13 +92,21 @@ node index.js
 ### AI服务配置
 
 在 `ai-service.js` 中，你可以：
-- 修改API密钥和模型名称
 - 更换AI服务提供商（如OpenAI、百度文心一言等）
 - 调整Prompt模板以改变谐音生成风格
+- 修改模型名称
 
 ### 端口配置
 
-在 `index.js` 中，你可以修改服务端口：
+通过环境变量 `PORT` 配置服务端口：
+
+```bash
+export PORT=8080  # Linux/Mac
+set PORT=8080     # Windows CMD
+$env:PORT=8080    # Windows PowerShell
+```
+
+或在 `index.js` 中直接修改默认端口：
 
 ```javascript
 const PORT = process.env.PORT || 3000; // 默认端口3000
@@ -103,12 +156,14 @@ curl -X POST http://localhost:3000/api/main \
 
 ```
 ├── ai-service.js      # AI服务模块
-├── cache.json         # 翻译缓存文件
+├── cache.json         # 翻译缓存文件（自动生成）
+├── config.json        # 配置文件（自动生成）
 ├── index.js           # 主服务器文件
-├── node_modules/      # 依赖包
+├── node_modules/      # 依赖包（自动安装）
 ├── package.json       # 项目配置
-└── public/            # 静态文件
-    └── index.html     # Web界面
+├── public/            # 静态文件
+│   └── index.html     # Web界面
+└── README.md          # 项目说明文档
 ```
 
 ## 缓存机制
@@ -139,10 +194,23 @@ async function callRealAI(words) {
 }
 ```
 
+## Git上传说明
+
+项目已配置 `.gitignore` 文件，自动排除以下不必要的文件：
+
+- `node_modules/`：依赖包，用户可通过 `npm install` 自动安装
+- `config.json`：配置文件，包含API密钥等敏感信息
+- `cache.json`：缓存文件，自动生成且会定期更新
+- `Dockerfile`：Docker构建文件
+- `package-lock.json`：依赖锁定文件
+- IDE配置文件和临时文件
+
 ## 注意事项
 
 - 确保你的API密钥有效且有足够的调用额度
+- 首次运行时，API密钥会自动保存到 `config.json` 文件中
 - 缓存文件 `cache.json` 会自动创建和更新
-- 建议定期备份缓存文件，避免数据丢失
+- 建议定期备份配置和缓存文件，避免数据丢失
+- Docker容器内的配置和缓存文件在容器重启后会丢失，如需持久化请使用挂载卷
 
 **享受翻译的乐趣！** 🎉

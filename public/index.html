@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>翻译助手 - Translation Assistant</title>
+    <title>F**kEPL</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5566cc 0%, #6655aa 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -29,16 +29,22 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #3388bb 0%, #00aacc 100%);
             color: white;
             padding: 24px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 50px;
+            font-weight: 1000;
             margin-bottom: 8px;
+            background-image: linear-gradient(90deg, #9ff, #aaf, #f9f);
+            text-shadow: 0px 0px 5px #fff5;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
         }
 
         .header p {
@@ -67,14 +73,15 @@
         }
 
         #message-input {
+        overflow-x: auto;
             width: 100%;
-            padding: 16px;
+            padding: 20px;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
             font-size: 16px;
             resize: vertical;
-            min-height: 120px;
-            font-family: inherit;
+            min-height: 300px;
+            font-family: 'Courier New', Courier, monospace;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -91,7 +98,7 @@
         }
 
         #call-api-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5566cc 0%, #6655aa 100%);
             color: white;
             border: none;
             padding: 14px 32px;
@@ -104,7 +111,7 @@
 
         #call-api-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(85, 102, 204, 0.4);
         }
 
         #call-api-btn:active:not(:disabled) {
@@ -130,6 +137,22 @@
 
         .clear-btn:hover {
             background: #e0e0e0;
+        }
+
+        .sample-btn {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sample-btn:hover {
+            background: #c8e6c9;
         }
 
         .loading {
@@ -162,7 +185,7 @@
         .output-section {
             background: #f8f9fa;
             border-radius: 12px;
-            padding: 24px;
+            padding: 10px;
             border: 2px solid #e9ecef;
         }
 
@@ -203,9 +226,9 @@
         #output-content {
             background: white;
             border-radius: 8px;
-            padding: 20px;
+            padding: 10px;
             border: 1px solid #dee2e6;
-            max-height: 400px;
+            max-height: 700px;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
@@ -225,6 +248,11 @@
 
         .result-content {
             color: #333;
+            overflow-x: auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 5px;
+            font-weight: bold;
             word-break: break-word;
         }
 
@@ -250,8 +278,134 @@
             }
 
             #call-api-btn,
+            .sample-btn,
             .clear-btn {
                 width: 100%;
+            }
+
+            .footer {
+                padding: 20px 10px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: linear-gradient(135deg, #3f9cde 0%, #00d1e0 100%);
+            color: white;
+            padding: 15px 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff, #9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-info p {
+            margin: 3px 0;
+            opacity: 0.9;
+            font-size: 12px;
+        }
+
+        .footer-info a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-info a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-license {
+            flex: 1;
+            min-width: 250px;
+            font-size: 11px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .footer-license h4 {
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Project Info Styles */
+        .project-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            border-left: 4px solid #667eea;
+        }
+
+        .project-info h3 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .project-info p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        /* Animation Effects */
+        .container {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
     </style>
@@ -260,35 +414,62 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>翻译助手</h1>
-            <p>使用AI技术进行智能翻译</p>
+            <h1>F**K EPL</h1>
+            <p>易语言翻译器 - 这个翻译器可以将你的代码转换为易语言，帮助你更“方便”的阅读代码</p>
         </div>
 
         <div class="content">
+            <!-- Project Info Section -->
+            <div class="project-info">
+                <h3>关于项目</h3>
+                <p><strong>神经谐音机</strong> - 一个基于AI的英文单词谐音翻译工具，可以将任何英文单词（包括代码、缩写、无意义字母组合）转换成搞笑/有趣的中文谐音。</p>
+                <p><strong>主要功能：</strong>AI驱动的精准谐音生成、本地缓存机制、易用的Web界面、模块化设计便于扩展。</p>
+                <p><strong>技术栈：</strong>Node.js + Express + AI服务（默认阿里云百炼）+ HTML/CSS/JavaScript。</p>
+                <p><strong>开源协议：</strong>MIT License</p>
+            </div>
+
             <div class="input-section">
                 <div class="input-group">
-                    <label for="message-input">输入文本</label>
-                    <textarea id="message-input" placeholder="请输入要翻译的文本..."></textarea>
+                    <label for="message-input">输入代码</label>
+                    <textarea id="message-input" placeholder="请输入要转换为易语言的代码..." wrap="off"></textarea>
                 </div>
 
                 <div class="button-group">
-                    <button id="call-api-btn" onclick="mainApi()">开始翻译</button>
+                    <button id="call-api-btn" onclick="mainApi()">开始转换</button>
+                    <button class="sample-btn" onclick="fillSampleText()">示例代码</button>
                     <button class="clear-btn" onclick="clearAll()">清空</button>
                     <div id="loading-indicator" class="loading" style="display: none;">
                         <div class="spinner"></div>
-                        <span>翻译中...</span>
+                        <span>转换中...</span>
                     </div>
                 </div>
             </div>
 
             <div class="output-section">
                 <div class="output-header">
-                    <h3>翻译结果</h3>
+                    <h3>转换结果</h3>
                     <span id="status-indicator" class="status pending">等待输入</span>
                 </div>
                 <div id="output-content">
-                    <p style="color: #999; text-align: center; padding: 40px;">输入文本并点击"开始翻译"按钮</p>
+                    <p style="color: #999; text-align: center; padding: 40px;">输入代码并点击"开始转换"按钮</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>神经谐音机</h3>
+                <p><strong>作者：</strong>mayozhayu</p>
+                <p><strong>邮箱：</strong><a href="mailto:jiangyunzhe2008@qq.com">jiangyunzhe2008@qq.com</a></p>
+                <p><strong>项目地址：</strong><a href="#">GitHub Repository</a></p>
+            </div>
+            <div class="footer-license">
+                <h4>MIT License</h4>
+                <p>Copyright (c) 2025 mayozhayu</p>
+                <p>本项目采用MIT许可证，详见项目根目录的LICENSE.md文件。</p>
             </div>
         </div>
     </div>
@@ -305,7 +486,7 @@
             try {
                 // 输入验证
                 if (!message.trim()) {
-                    showError('请输入要翻译的文本');
+                    showError('请输入要转换的代码');
                     return;
                 }
 
@@ -313,8 +494,8 @@
                 btn.disabled = true;
                 loading.style.display = 'flex';
                 status.className = 'status pending';
-                status.textContent = '翻译中';
-                output.innerHTML = '<p style="color: #667eea; text-align: center; padding: 40px;">正在翻译，请稍候...</p>';
+                status.textContent = '转换中';
+                output.innerHTML = '<p style="color: #667eea; text-align: center; padding: 40px;">正在转换，请稍候...</p>';
 
                 // 调用API
                 const response = await fetch('/api/main', {
@@ -338,7 +519,7 @@
 
                 // 更新状态
                 status.className = 'status success';
-                status.textContent = '翻译完成';
+                status.textContent = '转换完成';
 
             } catch (error) {
                 showError(error.message);
@@ -355,7 +536,7 @@
             const output = document.getElementById('output-content');
 
             status.className = 'status error';
-            status.textContent = '翻译失败';
+            status.textContent = '转换失败';
 
             output.innerHTML = `
                 <div class="result-item">
@@ -372,8 +553,8 @@
             if (data.success) {
                 output.innerHTML = `  
                     <div class="result-item">
-                        <div class="result-title">翻译结果</div>
-                        <textarea class="result-content" type="textarea" value="" readonly style="height: 500px;width: 100%;font-weight: bold;font-size: 16px;">${escapeHtml(data.assembledResult)}</textarea> 
+                        <div class="result-title">转换结果</div>
+                        <textarea class="result-content" type="textarea" value="" wrap="off" readonly style="height: 400px;width: 100%;font-size: 15px;font-family: 'Courier New', Courier, monospace;">${escapeHtml(data.assembledResult)}</textarea> 
                     </div>
                     
                     <div class="result-item">
@@ -404,8 +585,25 @@
                     </div>
                 `;
             } else {
-                showError(data.error || '翻译失败，请稍后重试');
+                showError(data.error || '转换失败，请稍后重试');
             }
+        }
+
+        // 填充示例代码
+        function fillSampleText() {
+            const sampleText = `function calculateSum(a, b) {
+    return a + b;
+}
+
+const result = calculateSum(5, 10);
+console.log("Result: " + result);
+
+if (result > 10) {
+    alert("The sum is greater than 10");
+} else {
+    alert("The sum is 10 or less");
+}`;
+            document.getElementById('message-input').value = sampleText;
         }
 
         // 清空所有内容
@@ -417,7 +615,7 @@
             status.className = 'status pending';
             status.textContent = '等待输入';
 
-            output.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">输入文本并点击"开始翻译"按钮</p>';
+            output.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">输入代码并点击"开始转换"按钮</p>';
         }
 
         // 工具函数：转义HTML字符

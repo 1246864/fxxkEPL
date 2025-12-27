@@ -1,7 +1,63 @@
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 
-const API_KEY = 'sk-17ea0fcc71194c0ebc1893dd5445c3b1'; // 替换为你的实际 API 密钥
-const MODEL_NAME = 'qwen-plus'; // 替换为你的实际模型名称
+// 配置文件路径
+const CONFIG_FILE = path.join(__dirname, 'config.json');
+
+// --- 配置管理 --- 
+
+/**
+ * 从配置文件加载配置
+ * @returns {Object} 配置对象
+ */
+function loadConfig() {
+    try {
+        const data = fs.readFileSync(CONFIG_FILE, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.log('❌ 未找到配置文件，将使用环境变量');
+        return {};
+    }
+}
+
+/**
+ * 保存配置到文件
+ * @param {Object} config - 配置对象
+ */
+function saveConfig(config) {
+    try {
+        const jsonContent = JSON.stringify(config, null, 2);
+        fs.writeFileSync(CONFIG_FILE, jsonContent, 'utf8');
+        console.log('✅ 配置已保存到文件');
+    } catch (err) {
+        console.error('❌ 保存配置失败:', err);
+    }
+}
+
+// --- API密钥管理 --- 
+
+// 先从配置文件加载配置
+const config = loadConfig();
+
+// 再从环境变量获取API密钥，如果存在则覆盖配置文件中的值
+let API_KEY = config.apiKey;
+const envAPIKey = process.env.API_KEY;
+
+if (envAPIKey) {
+    API_KEY = envAPIKey;
+    // 保存到配置文件
+    saveConfig({ ...config, apiKey: API_KEY });
+}
+
+// 模型名称
+const MODEL_NAME = config.modelName || 'qwen-plus';
+
+// 立即检查API密钥是否存在，如果不存在则退出进程
+if (!API_KEY) {
+    console.error('❌ API密钥不存在，请设置环境变量API_KEY');
+    process.exit(1);
+}
 
 /**
  * 调用真实AI服务进行翻译
@@ -9,6 +65,7 @@ const MODEL_NAME = 'qwen-plus'; // 替换为你的实际模型名称
  * @returns {Promise<Object>} - 翻译结果对象，键为单词，值为中文谐音
  */
 async function callRealAI(words) {
+    
     try {
         // 1. 拼接 Prompt
         const prompt = `
@@ -19,6 +76,7 @@ async function callRealAI(words) {
 3. 谐音可以夸张、无厘头，但发音要尽量接近。
 4. 只返回纯 JSON 对象，不要任何其他文字、注释或 markdown。
 5. 一些单词可以用拟声词,例如 "public" 可以用 "啪不里克"。
+6. 在翻译后的单词里,不能出现中文,例如 "mayozhayu" 不能翻译成 "妈哟zhayu" 要翻译成 "麻油炸鱼"。
 
 示例输入：["px", "div", "escapeHtml"]
 示例输出：{"px": "屁克斯", "div": "弟五", "escapeHtml": "一死凯普嗨特妹儿"}
